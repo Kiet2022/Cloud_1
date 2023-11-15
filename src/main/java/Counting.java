@@ -14,8 +14,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet( urlPatterns = {"/count"})
-public class Testing extends HttpServlet{
+@WebServlet(urlPatterns = { "/count" })
+public class Counting extends HttpServlet {
     // private final static String JDBC_URL =
     // "jdbc:mysql://ec2-54-169-248-237.ap-southeast-1.compute.amazonaws.com:3306/"
     // + "cloudcomputing";
@@ -25,11 +25,11 @@ public class Testing extends HttpServlet{
     private final static String DB_PASSWORD = "1931200013";
 
     private static final long serialVersionUID = 1;
-    
+
     @Override
-protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-//done
-BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(resp.getOutputStream(), "UTF-8"));
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        // done
+        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(resp.getOutputStream(), "UTF-8"));
 
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -43,8 +43,8 @@ BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(resp.getOutput
             PreparedStatement st = mySQLClient.prepareStatement("SELECT COUNT(*) as count FROM customer");
             ResultSet rs = st.executeQuery();
             String report = "";
-            if(rs.next()){
-                //System.out.println(rs.getString("count"));
+            if (rs.next()) {
+                // System.out.println(rs.getString("count"));
                 report = rs.getString("count");
             }
             resp.setContentType("text/plain");
@@ -58,4 +58,3 @@ BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(resp.getOutput
         }
     }
 }
-
