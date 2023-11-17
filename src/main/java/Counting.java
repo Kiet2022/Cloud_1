@@ -19,10 +19,10 @@ public class Counting extends HttpServlet {
     // private final static String JDBC_URL =
     // "jdbc:mysql://ec2-54-169-248-237.ap-southeast-1.compute.amazonaws.com:3306/"
     // + "cloudcomputing";
-    private final static String JDBC_URL = "jdbc:mysql://localhost:3306/" + "clouddatabase";
-    private final static String DB_USER = "root";
+    private final static String JDBC_URL = "jdbc:mysql://cse470.chjquod1dcot.ap-southeast-1.rds.amazonaws.com:3306/" + "Cloud_RDS";
+    private final static String DB_USER = "admin";
 
-    private final static String DB_PASSWORD = "1931200013";
+    private final static String DB_PASSWORD = "123AdminCSE470";
 
     private static final long serialVersionUID = 1;
 
@@ -40,7 +40,7 @@ public class Counting extends HttpServlet {
 
         try {
             Connection mySQLClient = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD);
-            PreparedStatement st = mySQLClient.prepareStatement("SELECT COUNT(*) as count FROM customer");
+            PreparedStatement st = mySQLClient.prepareStatement("SELECT COUNT(*) as count FROM Student");
             ResultSet rs = st.executeQuery();
             String report = "";
             if (rs.next()) {
