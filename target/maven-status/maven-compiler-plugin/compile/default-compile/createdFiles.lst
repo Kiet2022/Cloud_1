@@ -1,2 +1,6 @@
 Counting.class
+RDSConnection.class
+RDSConnectionRole.class
+TestRDBConnectionRole.class
 ServletGetThumbnailByKey.class
+DBConnection.class

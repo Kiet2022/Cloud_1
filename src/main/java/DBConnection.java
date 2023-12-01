@@ -1,4 +1,3 @@
-package cloudcomputing;
 
 import java.io.BufferedWriter;
 import java.io.IOException;

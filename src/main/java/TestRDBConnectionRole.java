@@ -1,58 +1,61 @@
 
-@WebServlet({ "/rdbconnectrole" })
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
-public class TestRDBConnectRole extends HttpServlet {
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+@WebServlet(urlPatterns = { "/rdbconnectionrole" })
 
-    private static final long serialVersionUID = 1L;
+public class TestRDBConnectionRole extends HttpServlet{
+	 private static final long serialVersionUID = 1L;
 
-    @Override
+	  @Override
+	  protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+	    throws ServletException, IOException {
+	    BufferedWriter writer = new BufferedWriter(
+	      new OutputStreamWriter(resp.getOutputStream(), "UTF-8")
+	    );
 
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	    try {
+	      Connection connection = RDSConnection.getDBConnectionUsingIam();
+	      //verify the connection is successful
+	        Statement stmt= connection.createStatement();
+	        ResultSet rs=stmt.executeQuery("SELECT 'Success!' FROM DUAL;");
+	        resp.setContentType("text/plain");
+		      resp.setStatus(200);
+	        while (rs.next()) {
+	        	
+	        	    String id = rs.getString(1);
+	        	    writer.write("Success");
+	  		      writer.flush();
+	           
+	        }
 
-        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(resp.getOutputStream(), "UTF-8"));
-
-        Connection connection;
-
-        try {
-
-            connection = RDSConnectionRole.getDBConnectionUsingIamRole();
-
-            Statement stmt = connection.createStatement();
-
-            ResultSet rs = stmt.executeQuery("SELECT 'Success!' FROM DUAL;");
-
-            while (rs.next()) {
-
-                String id = rs.getString(1);
-
-                System.out.println(id); // Should print "Success!"
-
-                writer.write(id);
-
-                writer.flush();
-
-            }
-
-            // rs.close();
-
-            stmt.close();
-
-            connection.close();
-
-            writer.close();
-
-            // RDSConnection.clearSslProperties();
-
-        } catch (Exception e) {
-
-            writer.write(e.toString());
-
-            writer.flush();
-
-            writer.close();
-
-        }
-
-    }
-
+	     
+	     
+	      writer.close();
+	    } catch (ClassNotFoundException | SQLException e) {
+	    	  resp.setContentType("text/plain");
+		      resp.setStatus(500);
+		      writer.write(e.toString());
+ 		      writer.flush();
+		      
+	    } catch (Exception e) {
+			// TODO Auto-generated catch block
+	    	 resp.setContentType("text/plain");
+		      resp.setStatus(500);
+		      writer.write(e.toString());
+ 		      writer.flush();
+		}
+	  }
 }
