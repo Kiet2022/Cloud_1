@@ -1,46 +1,28 @@
-/* 
+package cloudcomputing;
+
 import java.io.IOException;
-
 import java.io.OutputStream;
-
-
 import javax.servlet.ServletException;
-
 import javax.servlet.annotation.WebServlet;
-
 import javax.servlet.http.HttpServlet;
-
 import javax.servlet.http.HttpServletRequest;
-
 import javax.servlet.http.HttpServletResponse;
-
-
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
-
 import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
-
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
-
 import software.amazon.awssdk.core.ResponseInputStream;
-
 import software.amazon.awssdk.regions.Region;
-
 import software.amazon.awssdk.services.s3.S3Client;
-
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
-
 import software.amazon.awssdk.services.s3.model.GetObjectResponse;
-
 
 @WebServlet(urlPatterns = { "/image/*" })
 
 public class ServletGetThumbnailByKey extends HttpServlet {
 
+	private static final long serialVersionUID = 1L;
 
- private static final long serialVersionUID = 1L;
-
-
- @Override
+	@Override
 
  protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
@@ -53,12 +35,12 @@ public class ServletGetThumbnailByKey extends HttpServlet {
 
  String key = pathParts[1]; 
 
- String bucketName = <bucket-name>;
+ String bucketName = "cloudduy";
 
 
- AwsBasicCredentials awsBasicCredentials = AwsBasicCredentials.create(<access-key-id>,
+ AwsBasicCredentials awsBasicCredentials = AwsBasicCredentials.create("AKIA5XT4PCT4SEN2ZZOK",
 
-<secret-access-key>);
+"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");
 
 
  AwsCredentialsProvider awsCredentialsProvider;
@@ -66,9 +48,7 @@ public class ServletGetThumbnailByKey extends HttpServlet {
  awsCredentialsProvider = StaticCredentialsProvider.create(awsBasicCredentials);
 
 
- S3Client s3Client = S3Client.builder().credentialsProvider(awsCredentialsProvider).region(<region>)
-
- .build();
+ S3Client s3Client = S3Client.builder().credentialsProvider(awsCredentialsProvider).region(Region.AP_SOUTHEAST_1).build();
 
 
  GetObjectRequest request = GetObjectRequest.builder().bucket(bucketName).key(key).build();
@@ -99,4 +79,5 @@ public class ServletGetThumbnailByKey extends HttpServlet {
 
  outputStream.close();
 
- } */
+ }
+}
