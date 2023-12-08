@@ -1,3 +1,4 @@
+package cloudcomputing;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -14,6 +15,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 @WebServlet(urlPatterns = { "/rdbconnectionrole" })
 
 public class TestRDBConnectionRole extends HttpServlet{
@@ -27,7 +29,7 @@ public class TestRDBConnectionRole extends HttpServlet{
 	    );
 
 	    try {
-	      Connection connection = RDSConnection.getDBConnectionUsingIam();
+	      Connection connection = RDSConnectionRole.getDBConnectionUsingIamRole();
 	      //verify the connection is successful
 	        Statement stmt= connection.createStatement();
 	        ResultSet rs=stmt.executeQuery("SELECT 'Success!' FROM DUAL;");

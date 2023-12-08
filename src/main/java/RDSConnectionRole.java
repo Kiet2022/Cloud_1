@@ -1,4 +1,4 @@
-
+package cloudcomputing;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -23,15 +23,16 @@ import com.amazonaws.services.rds.auth.RdsIamAuthTokenGenerator;
 
 public class RDSConnectionRole {
 	 //&AWS; Credentials of the IAM user with policy enabling IAM Database Authenticated access to the db by the db user.
-    private static final DefaultAWSCredentialsProviderChain creds = new DefaultAWSCredentialsProviderChain();
-    private static final String AWS_ACCESS_KEY = creds.getCredentials().getAWSAccessKeyId();
-    private static final String AWS_SECRET_KEY = creds.getCredentials().getAWSSecretKey();
+   // private static final DefaultAWSCredentialsProviderChain creds = new DefaultAWSCredentialsProviderChain();
+  //  private static final String AWS_ACCESS_KEY = creds.getCredentials().getAWSAccessKeyId();
+   // private static final String AWS_SECRET_KEY = creds.getCredentials().getAWSSecretKey();
 
     //Configuration parameters for the generation of the IAM Database Authentication token
-    private static final String RDS_INSTANCE_HOSTNAME = "duyrds.cdjeb6feusd9.ap-southeast-1.rds.amazonaws.com";
+    private static final String RDS_INSTANCE_HOSTNAME = "cloudcomp23.c9bobnrufdr9.ap-southeast-1.rds.amazonaws.com";
     private static final int RDS_INSTANCE_PORT = 3306;
     private static final String REGION_NAME = "ap-southeast-1";
-    private static final String DB_USER = "duy";
+    private static final String DB_USER = "tanbinhtech";
+
     private static final String JDBC_URL = "jdbc:mysql://" + RDS_INSTANCE_HOSTNAME + ":" + RDS_INSTANCE_PORT +"/db";
 
     private static final String SSL_CERTIFICATE = "ap-southeast-1-bundle.pem";
@@ -44,7 +45,7 @@ public class RDSConnectionRole {
 
     public static void main(String[] args) throws Exception {
         //get the connection
-        Connection connection = getDBConnectionUsingIam();
+        Connection connection = getDBConnectionUsingIamRole();
 
         //verify the connection is successful
         Statement stmt= connection.createStatement();
@@ -67,7 +68,7 @@ public class RDSConnectionRole {
      * @return
      * @throws Exception
      */
-    public static Connection getDBConnectionUsingIam() throws Exception {
+    public static Connection getDBConnectionUsingIamRole() throws Exception {
         setSslProperties();
         return DriverManager.getConnection(JDBC_URL, setMySqlConnectionPropertiesRole());
     }
