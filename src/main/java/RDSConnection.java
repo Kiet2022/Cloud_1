@@ -28,10 +28,10 @@ public class RDSConnection {
 
     // Configuration parameters for the generation of the IAM Database
     // Authentication token
-    private static final String RDS_INSTANCE_HOSTNAME = "duyrds.cdjeb6feusd9.ap-southeast-1.rds.amazonaws.com";
+    private static final String RDS_INSTANCE_HOSTNAME = "cloudcomp23.c9bobnrufdr9.ap-southeast-1.rds.amazonaws.com";
     private static final int RDS_INSTANCE_PORT = 3306;
     private static final String REGION_NAME = "ap-southeast-1";
-    private static final String DB_USER = "duy";
+    private static final String DB_USER = "tanbinhtech";
     private static final String JDBC_URL = "jdbc:mysql://" + RDS_INSTANCE_HOSTNAME + ":" + RDS_INSTANCE_PORT + "/db";
 
     private static final String SSL_CERTIFICATE = "ap-southeast-1-bundle.pem";
@@ -40,7 +40,7 @@ public class RDSConnection {
     private static final String KEY_STORE_PROVIDER = "SUN";
     private static final String KEY_STORE_FILE_PREFIX = "sys-connect-via-ssl-test-cacerts";
     private static final String KEY_STORE_FILE_SUFFIX = ".jks";
-    private static final String DEFAULT_KEY_STORE_PASSWORD = "sanjiro11";
+    private static final String DEFAULT_KEY_STORE_PASSWORD = "trantuankiet";
 
     public static void main(String[] args) throws Exception {
         // get the connection
