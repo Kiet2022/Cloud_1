@@ -1,0 +1,32 @@
+import java.io.BufferedOutputStream;
+import java.io.FileOutputStream;
+
+import io.jsonwebtoken.io.IOException;
+import software.amazon.awssdk.core.ResponseInputStream;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.GetObjectRequest;
+import software.amazon.awssdk.services.s3.model.GetObjectResponse;
+
+public class UploadDownloadFunction {
+
+    public static void DownloadImg(String keyname) throws IOException {
+        String bucketname = "lab-source-images-resized";
+        
+        S3Client client = S3Client.builder().build();
+
+        GetObjectRequest request = GetObjectRequest.builder().bucket(bucketname).key(keyname).build();
+
+        ResponseInputStream<GetObjectResponse> inputStream = client.getObject(request);
+        BufferedOutputStream outputStream =  new BufferedOutputStream(new FileOutputStream(keyname));
+
+        byte[] buffer = new byte[4096];
+        int bytesRead = -1;
+
+        while((bytesRead = inputStream.read(buffer)) != -1){
+            outputStream.write(buffer, 0, bytesRead);
+        }
+        inputStream.close();
+        outputStream.close();
+    }
+
+}
