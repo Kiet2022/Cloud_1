@@ -1,6 +1,5 @@
-Counting.class
-RDSConnection.class
-RDSConnectionRole.class
-TestRDBConnectionRole.class
-ServletGetThumbnailByKey.class
-DBConnection.class
+cloudcomputing\RDSConnection.class
+cloudcomputing\DBConnection.class
+cloudcomputing\RDSConnectionRole.class
+cloudcomputing\TestRDBConnectionRole.class
+cloudcomputing\ServletGetThumbnailByKey.class

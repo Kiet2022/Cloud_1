@@ -1,5 +1,4 @@
 package cloudcomputing;
-
 import java.io.IOException;
 import java.io.OutputStream;
 import javax.servlet.ServletException;
@@ -24,60 +23,50 @@ public class ServletGetThumbnailByKey extends HttpServlet {
 
 	@Override
 
- protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
- resp.setContentType("image/jpeg");
+		resp.setContentType("image/jpeg");
 
+		String pathInfo = req.getPathInfo();
 
- String pathInfo = req.getPathInfo(); 
+		String[] pathParts = pathInfo.split("/");
 
- String[] pathParts = pathInfo.split("/");
+		String key = pathParts[1];
 
- String key = pathParts[1]; 
+		String bucketName = "cloudduy";
 
- String bucketName = "cloudduy";
+		AwsBasicCredentials awsBasicCredentials = AwsBasicCredentials.create("AKIA5XT4PCT4SEN2ZZOK",
 
+				"tXx1Qa10WeQyfJKK9iKxx67/QBYze7zGTha9/1G1");
 
- AwsBasicCredentials awsBasicCredentials = AwsBasicCredentials.create("AKIA5XT4PCT4SEN2ZZOK",
+		AwsCredentialsProvider awsCredentialsProvider;
 
-"tXx1Qa10WeQyfJKK9iKxx67/QBYze7zGTha9/1G1");
+		awsCredentialsProvider = StaticCredentialsProvider.create(awsBasicCredentials);
 
+		S3Client s3Client = S3Client.builder().credentialsProvider(awsCredentialsProvider).region(Region.AP_SOUTHEAST_1)
+				.build();
 
- AwsCredentialsProvider awsCredentialsProvider;
+		GetObjectRequest request = GetObjectRequest.builder().bucket(bucketName).key(key).build();
 
- awsCredentialsProvider = StaticCredentialsProvider.create(awsBasicCredentials);
+		ResponseInputStream<GetObjectResponse> response = s3Client.getObject(request);
 
+		OutputStream outputStream = resp.getOutputStream();
 
- S3Client s3Client = S3Client.builder().credentialsProvider(awsCredentialsProvider).region(Region.AP_SOUTHEAST_1).build();
+		byte[] buffer = new byte[4096];
 
+		int bytesRead = -1;
 
- GetObjectRequest request = GetObjectRequest.builder().bucket(bucketName).key(key).build();
+		while ((bytesRead = response.read(buffer)) != -1) {
 
+			outputStream.write(buffer, 0, bytesRead);
 
- ResponseInputStream<GetObjectResponse> response = s3Client.getObject(request);
+		}
 
- 
+		outputStream.flush();
 
- OutputStream outputStream = resp.getOutputStream();
+		response.close();
 
+		outputStream.close();
 
- byte[] buffer = new byte[4096];
-
- int bytesRead = -1;
-
-
- while ((bytesRead = response.read(buffer)) != -1) {
-
- outputStream.write(buffer, 0, bytesRead);
-
- }
-
- outputStream.flush();
-
-
- response.close();
-
- outputStream.close();
-
- }
+	}
 }

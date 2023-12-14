@@ -1,5 +1,4 @@
 package cloudcomputing;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -22,18 +21,22 @@ import com.amazonaws.services.rds.auth.GetIamAuthTokenRequest;
 import com.amazonaws.services.rds.auth.RdsIamAuthTokenGenerator;
 
 public class RDSConnectionRole {
-	 //&AWS; Credentials of the IAM user with policy enabling IAM Database Authenticated access to the db by the db user.
-   // private static final DefaultAWSCredentialsProviderChain creds = new DefaultAWSCredentialsProviderChain();
-  //  private static final String AWS_ACCESS_KEY = creds.getCredentials().getAWSAccessKeyId();
-   // private static final String AWS_SECRET_KEY = creds.getCredentials().getAWSSecretKey();
+    // &AWS; Credentials of the IAM user with policy enabling IAM Database
+    // Authenticated access to the db by the db user.
+    // private static final DefaultAWSCredentialsProviderChain creds = new
+    // DefaultAWSCredentialsProviderChain();
+    // private static final String AWS_ACCESS_KEY =
+    // creds.getCredentials().getAWSAccessKeyId();
+    // private static final String AWS_SECRET_KEY =
+    // creds.getCredentials().getAWSSecretKey();
 
-    //Configuration parameters for the generation of the IAM Database Authentication token
-    private static final String RDS_INSTANCE_HOSTNAME = "cloudcomp23.c9bobnrufdr9.ap-southeast-1.rds.amazonaws.com";
+    // Configuration parameters for the generation of the IAM Database
+    // Authentication token
+    private static final String RDS_INSTANCE_HOSTNAME =  "cloudcomp23.c9bobnrufdr9.ap-southeast-1.rds.amazonaws.com";
     private static final int RDS_INSTANCE_PORT = 3306;
     private static final String REGION_NAME = "ap-southeast-1";
     private static final String DB_USER = "tanbinhtech";
-
-    private static final String JDBC_URL = "jdbc:mysql://" + RDS_INSTANCE_HOSTNAME + ":" + RDS_INSTANCE_PORT +"/db";
+    private static final String JDBC_URL = "jdbc:mysql://" + RDS_INSTANCE_HOSTNAME + ":" + RDS_INSTANCE_PORT + "/db";
 
     private static final String SSL_CERTIFICATE = "ap-southeast-1-bundle.pem";
 
@@ -41,30 +44,32 @@ public class RDSConnectionRole {
     private static final String KEY_STORE_PROVIDER = "SUN";
     private static final String KEY_STORE_FILE_PREFIX = "sys-connect-via-ssl-test-cacerts";
     private static final String KEY_STORE_FILE_SUFFIX = ".jks";
-    private static final String DEFAULT_KEY_STORE_PASSWORD = "sanjiro11";
+    private static final String DEFAULT_KEY_STORE_PASSWORD = "trantuankiet";
 
     public static void main(String[] args) throws Exception {
-        //get the connection
+        // get the connection
         Connection connection = getDBConnectionUsingIamRole();
 
-        //verify the connection is successful
-        Statement stmt= connection.createStatement();
-        ResultSet rs=stmt.executeQuery("SELECT 'Success!' FROM DUAL;");
+        // verify the connection is successful
+        Statement stmt = connection.createStatement();
+        ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM COURSE;");
         while (rs.next()) {
-        	    String id = rs.getString(1);
-            System.out.println(id); //Should print "Success!"
+            String id = rs.getString(1);
+            System.out.println(id); // Should print "Success!"
         }
 
-        //close the connection
+        // close the connection
         stmt.close();
         connection.close();
-        
+
         clearSslProperties();
-        
+
     }
 
     /**
-     * This method returns a connection to the db instance authenticated using IAM Database Authentication
+     * This method returns a connection to the db instance authenticated using IAM
+     * Database Authentication
+     * 
      * @return
      * @throws Exception
      */
@@ -74,16 +79,18 @@ public class RDSConnectionRole {
     }
 
     /**
-     * This method sets the mysql connection properties which includes the IAM Database Authentication token
+     * This method sets the mysql connection properties which includes the IAM
+     * Database Authentication token
      * as the password. It also specifies that SSL verification is required.
+     * 
      * @return
      */
     private static Properties setMySqlConnectionPropertiesRole() {
         Properties mysqlConnectionProperties = new Properties();
-        mysqlConnectionProperties.setProperty("verifyServerCertificate","true");
+        mysqlConnectionProperties.setProperty("verifyServerCertificate", "true");
         mysqlConnectionProperties.setProperty("useSSL", "true");
-        mysqlConnectionProperties.setProperty("user",DB_USER);
-        mysqlConnectionProperties.setProperty("password",generateAuthTokenRole());
+        mysqlConnectionProperties.setProperty("user", DB_USER);
+        mysqlConnectionProperties.setProperty("password", generateAuthTokenRole());
         return mysqlConnectionProperties;
     }
 
@@ -91,16 +98,20 @@ public class RDSConnectionRole {
      * This method generates the IAM Auth Token.
      * An example IAM Auth Token would look like follows:
      * btusi123.cmz7kenwo2ye.rds.cn-north-1.amazonaws.com.cn:3306/?Action=connect&DBUser=iamtestuser&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20171003T010726Z&X-Amz-SignedHeaders=host&X-Amz-Expires=899&X-Amz-Credential=AKIAPFXHGVDI5RNFO4AQ%2F20171003%2Fcn-north-1%2Frds-db%2Faws4_request&X-Amz-Signature=f9f45ef96c1f770cdad11a53e33ffa4c3730bc03fdee820cfdf1322eed15483b
+     * 
      * @return
      */
     static String generateAuthTokenRole() {
-        RdsIamAuthTokenGenerator generator = RdsIamAuthTokenGenerator.builder().credentials(new InstanceProfileCredentialsProvider(false)).region(REGION_NAME).build();
+        RdsIamAuthTokenGenerator generator = RdsIamAuthTokenGenerator.builder()
+                .credentials(new InstanceProfileCredentialsProvider(false)).region(REGION_NAME).build();
         return generator.getAuthToken(GetIamAuthTokenRequest.builder()
                 .hostname(RDS_INSTANCE_HOSTNAME).port(RDS_INSTANCE_PORT).userName(DB_USER).build());
     }
 
     /**
-     * This method sets the SSL properties which specify the key store file, its type and password:
+     * This method sets the SSL properties which specify the key store file, its
+     * type and password:
+     * 
      * @throws Exception
      */
     private static void setSslProperties() throws Exception {
@@ -110,8 +121,10 @@ public class RDSConnectionRole {
     }
 
     /**
-     * This method returns the path of the Key Store File needed for the SSL verification during the IAM Database Authentication to
+     * This method returns the path of the Key Store File needed for the SSL
+     * verification during the IAM Database Authentication to
      * the db instance.
+     * 
      * @return
      * @throws Exception
      */
@@ -120,7 +133,8 @@ public class RDSConnectionRole {
     }
 
     /**
-     *  This method generates the SSL certificate
+     * This method generates the SSL certificate
+     * 
      * @return
      * @throws Exception
      */
@@ -137,6 +151,7 @@ public class RDSConnectionRole {
 
     /**
      * This method creates the Key Store File
+     * 
      * @param rootX509Certificate - the SSL certificate to be stored in the KeyStore
      * @return
      * @throws Exception
@@ -151,15 +166,16 @@ public class RDSConnectionRole {
         }
         return keyStoreFile;
     }
-    
+
     /**
      * This method clears the SSL properties.
+     * 
      * @throws Exception
      */
     private static void clearSslProperties() throws Exception {
-           System.clearProperty("javax.net.ssl.trustStore");
-           System.clearProperty("javax.net.ssl.trustStoreType");
-           System.clearProperty("javax.net.ssl.trustStorePassword"); 
+        System.clearProperty("javax.net.ssl.trustStore");
+        System.clearProperty("javax.net.ssl.trustStoreType");
+        System.clearProperty("javax.net.ssl.trustStorePassword");
     }
-    
+
 }

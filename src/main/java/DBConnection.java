@@ -1,5 +1,4 @@
 package cloudcomputing;
-
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -16,49 +15,45 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-	@WebServlet(urlPatterns = { "/count" })
-public class DBConnection extends HttpServlet{
-		
-		  private static final long serialVersionUID = 1L;
+@WebServlet(urlPatterns = { "/count" })
+public class DBConnection extends HttpServlet {
 
-		  @Override
-		  protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-		    throws ServletException, IOException {
-		    BufferedWriter writer = new BufferedWriter(
-		      new OutputStreamWriter(resp.getOutputStream(), "UTF-8")
-		    );
+	private static final long serialVersionUID = 1L;
 
-		    try {
-		      Connection connection = RDSConnection.getDBConnectionUsingIam();
-		      //verify the connection is successful
-		        Statement stmt= connection.createStatement();
-		        ResultSet rs=stmt.executeQuery("SELECT 'Success!' FROM DUAL;");
-		        resp.setContentType("text/plain");
-			      resp.setStatus(200);
-		        while (rs.next()) {
-		        	
-		        	    String id = rs.getString(1);
-		        	    writer.write("Success");
-		  		      writer.flush();
-		           
-		        }
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+		BufferedWriter writer = new BufferedWriter(
+				new OutputStreamWriter(resp.getOutputStream(), "UTF-8"));
 
-		     
-		     
-		      writer.close();
-		    } catch (ClassNotFoundException | SQLException e) {
-		    	  resp.setContentType("text/plain");
-			      resp.setStatus(500);
-			      writer.write(e.toString());
-	  		      writer.flush();
-			      
-		    } catch (Exception e) {
-				// TODO Auto-generated catch block
-		    	 resp.setContentType("text/plain");
-			      resp.setStatus(500);
-			      writer.write(e.toString());
-	  		      writer.flush();
+		try {
+			Connection connection = RDSConnection.getDBConnectionUsingIam();
+			// verify the connection is successful
+			Statement stmt = connection.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT 'Success!' FROM DUAL;");
+			resp.setContentType("text/plain");
+			resp.setStatus(200);
+			while (rs.next()) {
+
+				String id = rs.getString(1);
+				writer.write("Success");
+				writer.flush();
+
 			}
-		  }
+
+			writer.close();
+		} catch (ClassNotFoundException | SQLException e) {
+			resp.setContentType("text/plain");
+			resp.setStatus(500);
+			writer.write(e.toString());
+			writer.flush();
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			resp.setContentType("text/plain");
+			resp.setStatus(500);
+			writer.write(e.toString());
+			writer.flush();
 		}
-	
+	}
+}
