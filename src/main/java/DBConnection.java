@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet(urlPatterns = { "/count" })
+@WebServlet(urlPatterns = { "/showtable" })
 public class DBConnection extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
@@ -30,7 +30,7 @@ public class DBConnection extends HttpServlet {
 			Connection connection = RDSConnection.getDBConnectionUsingIam();
 			// verify the connection is successful
 			Statement stmt = connection.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT 'Success!' FROM DUAL;");
+			ResultSet rs = stmt.executeQuery("SELECT * FROM COURSE;");
 			resp.setContentType("text/plain");
 			resp.setStatus(200);
 			while (rs.next()) {
